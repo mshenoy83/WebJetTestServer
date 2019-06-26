@@ -22,23 +22,23 @@ namespace WebjetTestServer.Controllers
         public async Task<IActionResult> GetMovieList()
         {
             var taskList = new List<Task<MovieSearchDto>>();
-            foreach(var repo in _movieRepositories)
-                {
+            foreach (var repo in _movieRepositories)
+            {
 
                 taskList.Add(repo.SearchMovies());
-                }
+            }
             await Task.WhenAll(taskList);
 
             var movieSearch = new MovieSearchDto();
 
-            foreach(var tsk in taskList)
-                {
+            foreach (var tsk in taskList)
+            {
                 var result = await tsk;
-                if(result.Movies.Any())
-                    {
+                if (result.Movies.Any())
+                {
                     movieSearch.Movies.AddRange(result.Movies);
-                    }
                 }
+            }
             return Ok(movieSearch);
         }
 
@@ -46,23 +46,23 @@ namespace WebjetTestServer.Controllers
         public async Task<IActionResult> GetMovieDetails(string id)
         {
             var taskList = new List<Task<MovieDetailsDto>>();
-            foreach(var repo in _movieRepositories)
-                {
+            foreach (var repo in _movieRepositories)
+            {
 
                 taskList.Add(repo.GetMovieDetails(id));
-                }
+            }
             await Task.WhenAll(taskList);
 
-            var moviedetails= new List<MovieDetailsDto>();
+            var moviedetails = new List<MovieDetailsDto>();
 
-            foreach(var tsk in taskList)
-                {
+            foreach (var tsk in taskList)
+            {
                 var result = await tsk;
-                if(result!= null && !string.IsNullOrEmpty(result.ID))
-                    {
+                if (result != null && !string.IsNullOrEmpty(result.ID))
+                {
                     moviedetails.Add(result);
-                    }
                 }
+            }
             return Ok(moviedetails);
         }
 
