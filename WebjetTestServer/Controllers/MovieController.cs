@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +9,11 @@ namespace WebjetTestServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MovieSearchController : ControllerBase
+    public class MovieController : ControllerBase
     {
         private readonly IEnumerable<IMovieRepository> _movieRepositories;
 
-        public MovieSearchController(IEnumerable<IMovieRepository> movieRepositories)
+        public MovieController(IEnumerable<IMovieRepository> movieRepositories)
         {
             _movieRepositories = movieRepositories;
         }
@@ -41,6 +40,30 @@ namespace WebjetTestServer.Controllers
                     }
                 }
             return Ok(movieSearch);
+        }
+
+        [HttpGet("{id}/Details")]
+        public async Task<IActionResult> GetMovieDetails(string id)
+        {
+            var taskList = new List<Task<MovieDetailsDto>>();
+            foreach(var repo in _movieRepositories)
+                {
+
+                taskList.Add(repo.GetMovieDetails(id));
+                }
+            await Task.WhenAll(taskList);
+
+            var moviedetails= new List<MovieDetailsDto>();
+
+            foreach(var tsk in taskList)
+                {
+                var result = await tsk;
+                if(result!= null && !string.IsNullOrEmpty(result.ID))
+                    {
+                    moviedetails.Add(result);
+                    }
+                }
+            return Ok(moviedetails);
         }
 
     }
