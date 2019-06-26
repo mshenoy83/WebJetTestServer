@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace WebjetTestServer
 {
@@ -26,6 +19,11 @@ namespace WebjetTestServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddHttpClient("WebJet",c=>
+            {
+                c.BaseAddress = new System.Uri("http://webjetapitest.azurewebsites.net/api/");
+                c.DefaultRequestHeaders.Add("x-access-token", "sjd1HfkjU83ksdsm3802k");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
