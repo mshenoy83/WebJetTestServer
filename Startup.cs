@@ -46,8 +46,6 @@ namespace WebjetTestServer
 
             services.AddSwaggerGen(c =>
             {
-                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "WebJetApi.xml"));
-                c.DescribeAllEnumsAsStrings();
                 c.SwaggerDoc("v1", new Info { Title = "WebJet API", Version = "v1" });
             });
         }
